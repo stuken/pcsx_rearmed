@@ -323,6 +323,11 @@ endif
 endif
 endif
 
+ifeq "$(platform)" "libnx"
+CFLAGS += -Ideps/libnx/heap/
+OBJS += deps/libnx/heap/heap.o
+endif
+
 ifeq "$(USE_PLUGIN_LIB)" "1"
 OBJS += frontend/plugin_lib.o
 OBJS += frontend/libpicofe/linux/plat.o

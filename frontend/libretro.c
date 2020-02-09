@@ -15,8 +15,26 @@
 #include <sys/syscall.h>
 #endif
 
-#ifdef SWITCH
+#ifdef HAVE_LIBNX
 #include <switch.h>
+#include "../deps/libnx/heap/heap.h"
+Jit jitController;
+u32* rwAddress;
+u32* rxAddress;
+
+void freeJitBuffer() {
+	printf("closing buffer\n");
+	jitClose(&jitController);
+}
+
+void initJitBuffer() {
+	printf("opening buffer\n");
+	u32 size = (1024 * 1024 *64);
+	jitCreate(&jitController, size);
+	rwAddress = (u32*)jitGetRwAddr(&jitController);
+	rxAddress = (u32*)jitGetRxAddr(&jitController);
+	heap_init(rwAddress);
+}
 #endif
 
 #include "../libpcsxcore/misc.h"
@@ -2665,6 +2683,10 @@ void retro_init(void)
 	struct retro_rumble_interface rumble;
 	int ret;
 
+#ifdef HAVE_LIBNX
+	initJitBuffer();
+#endif
+
 #ifdef __MACH__
 	// magic sauce to make the dynarec work on iOS
 	syscall(SYS_ptrace, 0 /*PTRACE_TRACEME*/, 0, 0, 0);
@@ -2747,6 +2769,9 @@ void retro_deinit(void)
 {
 	ClosePlugins();
 	SysClose();
+#ifdef HAVE_LIBNX
+	freeJitBuffer();
+#endif
 #ifdef _3DS
    linearFree(vout_buf);
 #else

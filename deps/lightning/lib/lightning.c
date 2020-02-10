@@ -2110,7 +2110,7 @@ _jit_emit(jit_state_t *_jit)
 		u32* oldRwPage = oldRxPage - rxAddress + rwAddress;
 		u32* newRwPage = hmalloc(length);
 		u32* newRxPage = newRwPage - rwAddress + rxAddress;
-		memcpy(newRwPage, oldRwPage, _jit->code.length);
+
 		hfree(oldRwPage);
 		_jit->code.ptr = newRxPage;
 #else

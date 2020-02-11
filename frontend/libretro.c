@@ -29,7 +29,7 @@ void freeJitBuffer() {
 
 void initJitBuffer() {
 	printf("opening buffer\n");
-	u32 size = (1024 * 1024 *64);
+	u32 size = (1024 * 1024 * 512);
 	jitCreate(&jitController, size);
 	rwAddress = (u32*)jitGetRwAddr(&jitController);
 	rxAddress = (u32*)jitGetRxAddr(&jitController);

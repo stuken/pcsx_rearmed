@@ -19,8 +19,8 @@
 #include <switch.h>
 #include "../deps/libnx/heap/heap.h"
 Jit jitController;
-u32* rwAddress;
-u32* rxAddress;
+uintptr_t rwAddress;
+uintptr_t rxAddress;
 
 void freeJitBuffer() {
 	printf("closing buffer\n");
@@ -31,8 +31,8 @@ void initJitBuffer() {
 	printf("opening buffer\n");
 	u32 size = (1024 * 1024 * 512);
 	jitCreate(&jitController, size);
-	rwAddress = (u32*)jitGetRwAddr(&jitController);
-	rxAddress = (u32*)jitGetRxAddr(&jitController);
+	rwAddress = (uintptr_t)jitGetRwAddr(&jitController);
+	rxAddress = (uintptr_t)jitGetRxAddr(&jitController);
 	heap_init(rwAddress);
 }
 #endif

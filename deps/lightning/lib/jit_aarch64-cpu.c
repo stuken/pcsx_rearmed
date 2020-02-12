@@ -19,8 +19,8 @@
 
 #if PROTO
 #ifdef HAVE_LIBNX
-    extern u32* rwAddress;
-    extern u32* rxAddress;
+    extern uintptr_t rwAddress;
+    extern uintptr_t rxAddress;
 #endif
 typedef union {
 /* aarch64-opc.c */
@@ -218,7 +218,7 @@ typedef union {
 #ifndef HAVE_LIBNX
 #  define ii(i)				*_jit->pc.ui++ = i
 #else
-#  define ii(i)             *((jit_uword_t*)((uintptr_t)(_jit->pc.ui++) - (uintptr_t)rxAddress + (uintptr_t)rwAddress)) = i
+#  define ii(i)             *((jit_uword_t*)((uintptr_t)(_jit->pc.ui++) - rxAddress + rwAddress)) = i
 #endif
 #  define ldr(r0,r1)			ldr_l(r0,r1)
 #  define ldxr(r0,r1,r2)		ldxr_l(r0,r1,r2)
@@ -2417,7 +2417,7 @@ _patch_at(jit_state_t *_jit, jit_word_t instr, jit_word_t label)
     } u;
 #ifdef HAVE_LIBNX
     jit_word_t rxInstr = instr;
-    instr = ((jit_word_t)((uintptr_t)(instr) - (uintptr_t)rxAddress + (uintptr_t)rwAddress));
+    instr = ((jit_word_t)((uintptr_t)(instr) - rxAddress + rwAddress));
 #endif
     u.w = instr;
     i.w = u.i[0];
